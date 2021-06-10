@@ -1,3 +1,4 @@
+require('dotenv').config()
 module.exports = {
   client: {
     partials: [
@@ -25,7 +26,7 @@ module.exports = {
   },
   config: {
     db: "mongoURL",
-    token: "Bot Token",
+    token: process.env.TOKEN,
     prefix: "*",
     ownerID: "OWNER ID",
     support:{

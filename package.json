@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main",
-    "dev" : "nodemon main.js -dev"
+    "dev": "nodemon main.js -dev"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +15,11 @@
     "discord-player": "^4.1.0",
     "discord-temp-channels": "^2.0.0",
     "discord.js": "^12.5.3",
+    "ffmpeg-static": "^4.3.0",
     "quickmongo": "^3.0.2",
     "topgg-autoposter": "^2.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }
