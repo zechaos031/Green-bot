@@ -16,6 +16,7 @@
     "discord-temp-channels": "^2.0.0",
     "discord.js": "^12.5.3",
     "ffmpeg-static": "^4.3.0",
+    "mongoose": "^5.12.13",
     "quickmongo": "^3.0.2",
     "topgg-autoposter": "^2.0.0"
   },
