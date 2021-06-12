@@ -35,7 +35,8 @@ const guild = new Schema({
       logs:null,
       suggestion:null,
       starboard:null,
-      chatBot:null
+      chatBot:null,
+      level:null
     }
   },
   autonick:{
@@ -45,7 +46,6 @@ const guild = new Schema({
       nick:null
     }
   },
-
 
   question:{
     type:Array,
