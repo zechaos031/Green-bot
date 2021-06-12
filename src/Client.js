@@ -1,9 +1,9 @@
 const { Client, Collection } = require("discord.js"),
     TempChannels = require("discord-temp-channels"),
     { Player } = require('discord-player'),
-    { Database } = require('quickmongo'),
     AutoPoster = require('topgg-autoposter'),
     DataBaseManager = require('./Utils/Manager/DatabaseManager'),
+    GiveawayManager = require('./Utils/Manager/GiveawaysManager'),
     {readdir} = require('fs/promises');
 
 
@@ -14,18 +14,48 @@ class GreenBot extends Client {
     this.config = option.config
     this.tempChannels = new TempChannels(this)
     this.db = new DataBaseManager(this)
+    this.giveaway = new GiveawayManager(this,{
+      storage: false,
+      updateCountdownEvery: 10000,
+      default: {
+        botsCanWin: false,
+        exemptPermissions: [],
+        embedColorEnd: '#4FEA2D',
+        embedColor: "#D6EA2D",
+        reaction: '🎁'
+      }
+    })
     this.player = new Player(this, {
       leaveOnEnd: true, leaveOnStop: true, leaveOnEmpty: true, timeout: 0, volume: 70, quality: 'high',
     });
-    //this.db = new Database(this.config.db);
-    //this.ap = AutoPoster(this.config.botList.topGG, this)
-    /**/
+
+    require('./Utils/mongoose').init(this)
+    super.on('message', (message) => {
+      const ms = require('ms'); // npm install ms
+      const args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
+      const command = args.shift().toLowerCase();
+
+      if (command === 'start-giveaway') {
+        // g!start-giveaway 2d 1 Awesome prize!
+        // Will create a giveaway with a duration of two days, with one winner and the prize will be "Awesome prize!"
+
+        this.giveaway.start(message.channel, {
+          time: ms(args[0]),
+          winnerCount: parseInt(args[1]),
+          prize: args.slice(2).join(' ')
+        }).then((gData) => {
+          console.log(gData); // {...} (messageID, end date and more)
+        });
+        // And the giveaway has started!
+      }
+    });
   }
 
   init = () => {
     this.loadCommand()
     this.loadEvent()
     this.connect()
+
   }
   connect = () =>{
     super.login(this.config.token)
