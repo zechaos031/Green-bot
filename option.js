@@ -1,4 +1,5 @@
-require('dotenv').config()
+require('dotenv').config();
+
 module.exports = {
   client: {
     partials: [
@@ -17,28 +18,28 @@ module.exports = {
         'GUILD_BANS',
         'GUILD_INVITES',
         'GUILD_EMOJIS',
-        'GUILD_VOICE_STATES']
+        'GUILD_VOICE_STATES'],
     },
-    disableMentions: "all",
+    disableMentions: 'all',
     autoReconnect: true,
     messageCacheMaxSize: 100,
     messageSweepInterval: 120,
   },
   config: {
-    db: "mongoURL",
+    db: process.env.DB,
     token: process.env.TOKEN,
-    prefix: "*",
-    ownerID: "OWNER ID",
-    support:{
-      id:'SUPPORT ID',
-      invitation:'Link'
+    prefix: '*',
+    ownerID: 'OWNER ID',
+    support: {
+      id: 'SUPPORT ID',
+      invitation: 'Link',
     },
     embed: {
-      footer: (name) => `${ name } | Open Source`
+      footer: (name) => `${name} | Open Source`,
     },
     botList: {
-      topGG: "TOPGG AUTHORIZATION"
-    }
+      topGG: 'TOPGG AUTHORIZATION',
+    },
 
   },
 };

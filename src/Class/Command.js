@@ -1,13 +1,13 @@
-const { Collection } = require("discord.js");
+const { Collection } = require('discord.js');
 
 class Command {
-  constructor (client, options) {
+  constructor(client, options) {
     this.help = {
-      name: options.name || "Pas de nom",
-      description: options.description || "Pas de description",
+      name: options.name || 'Pas de nom',
+      description: options.description || 'Pas de description',
       usage: options.usage || "Pas d'usage",
-      aliases: options.aliases || ["Aucun aliases"],
-      category: options.category || "Pas de catégorie",
+      aliases: options.aliases || ['Aucun aliases'],
+      category: options.category || 'Pas de catégorie',
       cooldowns: options.cooldowns || 1000,
       exemple: options.exemple || "Pas d'exemple",
       subCommands: options.subCommands || [],
@@ -23,32 +23,32 @@ class Command {
     this._dataCooldown = new Collection();
   }
 
-  static bootstrap (client) {
+  static bootstrap(client) {
     throw new Error(
-        `You must create a bootstrap method into your ${this.name} command class`
+      `You must create a bootstrap method into your ${this.name} command class`,
     );
   }
 
-  findMembers (ctx) {
+  findMembers(ctx) {
     return new Promise((resolve, reject) => {
-      const query = ctx.args.join(" ");
+      const query = ctx.args.join(' ');
       if (!query) return resolve(ctx.member.user);
 
       const mention = new RegExp(/<@!|<@/g);
-      if (mention.test(query))
+      if (mention.test(query)) {
         return resolve(
-            ctx.guild.members.cache.get(query.replace(/<@!|<@|>/g, "")).user
+          ctx.guild.members.cache.get(query.replace(/<@!|<@|>/g, '')).user,
         );
+      }
 
       const matche = ctx.guild.members.cache.filter(
-          (x) =>
-              x.user.username.toLowerCase().includes(query) ||
-              x.user.discriminator.includes(query) ||
-              x.user.id === query
+        (x) => x.user.username.toLowerCase().includes(query)
+              || x.user.discriminator.includes(query)
+              || x.user.id === query,
       ).map((x) => x.user);
 
       if (matche.length === 1) return resolve(matche[0]);
-      else if (matche.length > 1) {
+      if (matche.length > 1) {
         ctx.send({
           embed: {
             color: 0x2f3136,
@@ -58,11 +58,11 @@ class Command {
                 dynamic: true,
               }),
             },
-            title: "Selected a member with the number associated with his nickname",
-            description: `${matche.slice(0, 5).map((u, i) => `[${i + 1}] ◉ ${u.tag}`).join("\n")}\n\n${
-                matche.length > 5
-                    ? `and ${matche.length - 5} more...`
-                    : ""
+            title: 'Selected a member with the number associated with his nickname',
+            description: `${matche.slice(0, 5).map((u, i) => `[${i + 1}] ◉ ${u.tag}`).join('\n')}\n\n${
+              matche.length > 5
+                ? `and ${matche.length - 5} more...`
+                : ''
             }`,
             timestamp: new Date(),
             footer: {
@@ -75,56 +75,54 @@ class Command {
           max: 1,
           time: 30000,
         }).then((collect) => {
-          if (collect.size === 0)
+          if (collect.size === 0) {
             return ctx.send(
-                "No answer after 30 seconds, operation canceled."
+              'No answer after 30 seconds, operation canceled.',
             );
+          }
 
-          if (!isNaN(collect.first().content) &&
-              collect.first().content <= 5 &&
-              collect.first().content > 0) {
+          if (!isNaN(collect.first().content)
+              && collect.first().content <= 5
+              && collect.first().content > 0) {
             return resolve(matche[collect.first().content - 1]);
-          } else return ctx.send("The request selection is invalid");
+          } return ctx.send('The request selection is invalid');
         }).catch((err) => {
-          ctx.send("Internal Error");
+          ctx.send('Internal Error');
           reject(new Error(err));
         });
       }
     });
   }
 
-  cooldownInfo (user) {
-    let now = Date.now();
-    if (!this._dataCooldown.has(this.name))
-      this._dataCooldown.set(this.name, new Collection());
+  cooldownInfo(user) {
+    const now = Date.now();
+    if (!this._dataCooldown.has(this.name)) { this._dataCooldown.set(this.name, new Collection()); }
     const timestamp = this._dataCooldown.get(this.name).get(user.id);
     if (timestamp > now) return { status: true, time: timestamp - now };
-    else {
-      this._dataCooldown.get(this.name).set(user.id, now + this.help.cooldowns);
-      return { status: false };
-    }
+
+    this._dataCooldown.get(this.name).set(user.id, now + this.help.cooldowns);
+    return { status: false };
   }
 
-  _sweep () {
+  _sweep() {
     for (const [key, value] of this._dataCooldown) {
       this._dataCooldown.set(
-          key,
-          value.filter((x) => x > Date.now())
+        key,
+        value.filter((x) => x > Date.now()),
       );
     }
   }
 
-  millisToMinutesAndSeconds (millis) {
+  millisToMinutesAndSeconds(millis) {
     const minutes = Math.floor(millis / 60000);
-    const seconds = ( ( millis % 60000 ) / 1000 ).toFixed(0);
-    return minutes + ":" + ( seconds < 10 ? "0" : "" ) + seconds;
+    const seconds = ((millis % 60000) / 1000).toFixed(0);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
-  hasPermission (ctx, command) {
-    if (command.conf.ownerOnly &&
-        !ctx.client.config.owner.includes(ctx.author.id))
-      return false;
-    return !( command.conf.userPermissions.length > 0 && !command.conf.userPermissions.every((p) => ctx.member.hasPermission(p))
+  hasPermission(ctx, command) {
+    if (command.conf.ownerOnly
+        && !ctx.client.config.owner.includes(ctx.author.id)) { return false; }
+    return !(command.conf.userPermissions.length > 0 && !command.conf.userPermissions.every((p) => ctx.member.hasPermission(p))
     );
   }
 }
