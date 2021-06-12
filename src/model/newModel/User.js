@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const guild = new Schema({
+const User = new Schema({
   TableId: Schema.Types.ObjectId,
   userID: String,
   birtday:{
@@ -21,4 +21,4 @@ const guild = new Schema({
   }
 
 })
-module.exports = model('guild', guild)
+module.exports = model('user', User)

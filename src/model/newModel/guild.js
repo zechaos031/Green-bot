@@ -36,7 +36,17 @@ const guild = new Schema({
       suggestion:null,
       starboard:null,
       chatBot:null,
-      level:null
+      level:null,
+      capchat:null
+    }
+  },
+  welcome:{
+    type:Object,
+    default:{
+      channel:null,
+      image:null,
+      message:null,
+      active:false
     }
   },
   autonick:{

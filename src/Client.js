@@ -3,6 +3,7 @@ const { Client, Collection } = require("discord.js"),
     { Player } = require('discord-player'),
     { Database } = require('quickmongo'),
     AutoPoster = require('topgg-autoposter'),
+    DataBaseManager = require('./Utils/Manager/DatabaseManager'),
     {readdir} = require('fs/promises');
 
 
@@ -12,6 +13,7 @@ class GreenBot extends Client {
     ["commands"].forEach(x => this[x] = new Collection());
     this.config = option.config
     this.tempChannels = new TempChannels(this)
+    this.db = new DataBaseManager(this)
     this.player = new Player(this, {
       leaveOnEnd: true, leaveOnStop: true, leaveOnEmpty: true, timeout: 0, volume: 70, quality: 'high',
     });
@@ -25,7 +27,6 @@ class GreenBot extends Client {
     this.loadEvent()
     this.connect()
   }
-
   connect = () =>{
     super.login(this.config.token)
   }
