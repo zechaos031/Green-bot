@@ -3,7 +3,7 @@ const { Giveaway } = require('../../model/index');
 
 class GiveawayManagerWithOwnDatabase extends GiveawaysManager {
   async getAllGiveaways() {
-    return await Giveaway.find({});
+    return Giveaway.find({});
   }
 
   async saveGiveaway(messageID, giveawayData) {
@@ -21,5 +21,6 @@ class GiveawayManagerWithOwnDatabase extends GiveawaysManager {
     return true;
   }
 }
+
 
 module.exports = GiveawayManagerWithOwnDatabase;

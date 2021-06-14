@@ -14,6 +14,8 @@ class GreenBot extends Client {
     this.config = option.config
     this.tempChannels = new TempChannels(this)
     this.db = new DataBaseManager(this)
+    this.compenants = require('./Utils/compenents')
+
     this.giveaway = new GiveawayManager(this,{
       storage: false,
       updateCountdownEvery: 10000,
@@ -36,24 +38,20 @@ class GreenBot extends Client {
       const command = args.shift().toLowerCase();
 
       if (command === 'start-giveaway') {
-        // g!start-giveaway 2d 1 Awesome prize!
-        // Will create a giveaway with a duration of two days, with one winner and the prize will be "Awesome prize!"
-
         this.giveaway.start(message.channel, {
           time: ms(args[0]),
           winnerCount: parseInt(args[1]),
           prize: args.slice(2).join(' ')
         }).then((gData) => {
-          console.log(gData); // {...} (messageID, end date and more)
+          console.log(gData);
         });
-        // And the giveaway has started!
       }
     });
   }
 
-  init = () => {
-    this.loadCommand()
-    this.loadEvent()
+   init =async () => {
+   await this.loadCommand()
+    await this.loadEvent()
     this.connect()
 
   }
@@ -61,7 +59,7 @@ class GreenBot extends Client {
     super.login(this.config.token)
   }
 
-  loadCommand() {
+  async loadCommand() {
     readdir('./src/Commands').then((files) => {
       if ( !files.length ) return console.error('[Bot] Aucun dossier pour les commande trouvé !')
       for ( const file of files.filter(file => !file.endsWith('.js')) ) {
@@ -84,33 +82,35 @@ class GreenBot extends Client {
     })
   }
 
-  loadEvent() {
-    readdir("./src/Events").then((files) => {
-      if ( !files ) return;
-      let Number = 0
-      for ( const file of files ) {
-        if ( !file ) return;
-        try {
-          if ( !file ) return;
-          Number++
-          const event = require(`./Events/${ file }`);
-          super.on(file.split(".")[0], event.bind(null, this));
-        } catch ( err ) {
-          console.error(err)
-        }
+  async loadEvent() {
+
+    readdir('./src/Events').then((files) => {
+
+      if ( !files.length ) return console.error('[Bot] Aucun dossier pour les events trouvé !')
+      for ( const file of files.filter(file => !file.endsWith('.js')) ) {
+        readdir(`./src/Events/${ file }`).then((envts) => {
+          if ( !envts ) return
+          let Number = 0
+
+          for ( const evt of envts ) {
+            try {
+              Number++
+              const event = require(`./Events/${ file }/${ evt }`);
+              super.on(evt.split(".")[0], event.bind(null, this));
+            } catch ( e ) {
+              console.info("[Bot] " + evt + " n'as pas chargé\n" + e)
+            }
+          }
+          console.info(`[Bot] ${ Number }/${ envts.length } events chargé dans ${ file }`)
+        })
       }
-      console.info(`[Bot] ${ Number }/${ files.length } event chargé`);
-
-    }).catch((err) => {
-      console.error(err)
-
     })
-    return this
   }
 
-  static loadComponent() {
-
+  async refreshStorage() {
+    return this.client.shard.broadcastEval(() => this.giveaway.getAllGiveaways());
   }
 }
+
 
 module.exports = GreenBot
