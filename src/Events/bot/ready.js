@@ -1,5 +1,4 @@
-const GiveawaysManager = require('../Utils/Manager/GiveawaysManager');
-
+const GiveawaysManager = require('../../Utils/Manager/GiveawaysManager');
 module.exports = async (client) => {
   client.manager = new GiveawaysManager(client, {
     storage: false,
@@ -14,6 +13,6 @@ module.exports = async (client) => {
   });
 };
 
-function createGuild(client, guild) {
-  client.db.findOrCreate('Guild', guild.id);
+async function createGuild(client, guild) {
+  await client.db.findOrCreate("Guild", guild.id)
 }
