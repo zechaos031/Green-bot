@@ -1,5 +1,5 @@
 const Model = require('../../model/index');
-
+const mongoose = require("mongoose");
 class DatabaseManager {
   constructor(client) {
     this.client = client;
@@ -7,20 +7,19 @@ class DatabaseManager {
   }
 
   /**
-     *
      * @param type {String} Le model
      * @param find {Object} la donnée en trouve. Default : {}
      * @example
-     * get("Guild", {})
-     * get("Guild")
+     * getData("Guild", {})
+     * getData("Guild")
      *  // Envoi toutes les donnée de la table Guild
      *
-     * get("Guild", {id: 123456789012345678})
+     * getData("Guild", {id: 123456789012345678})
      *  // Envoie seulement les donnée de la guild 123456789012345678
      * @returns {Promise<Data|boolean>} Envoi les donnée ou false si il n'existe pas
      */
 
-  async get(type, find = {}) {
+  async getData(type, find = {}) {
     if (typeof find === 'object') find = {};
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
     const data = await this.models[type].findOne(find);
@@ -29,19 +28,18 @@ class DatabaseManager {
   }
 
   /**
-     *
      * @param type {String} Le model
      * @param find {Object} la donnée en trouve. Default : {}
      * @param assign {Object} Met les nouvelle donnée. Default : {}
      * @example
-     * update("Guild", {}, {autonick : autonick{active:true}})
+     * updateData("Guild", {}, {autonick : autonick{active:true}})
      *  // Met a toutes les guild l'autonick d'activé
    *
-     * update("Guild", {id: 123456789012345678},{autonick : autonick{active:true}})
+     * updateData("Guild", {id: 123456789012345678},{autonick : autonick{active:true}})
      *  // Met a la guild 123456789012345678 l'autonick d'activé
      * @returns {Promise<Data|boolean>} Envoi les donnée ou false si il n'existe pas
      */
-  async update(type, find = {}, assign = {}) {
+  async updateData(type, find = {}, assign = {}) {
     if (typeof find !== 'object') find = {};
     if (typeof assign !== 'object') assign = {};
 
@@ -55,20 +53,22 @@ class DatabaseManager {
     return data.updateOne(Object.assign(data, assign));
   }
   /**
-   *
    * @param type {String} Le model
    * @param id {String} L'id (guildID, userID)
    * @example
-   * create("Guild", "123456789012345678")
+   * createData("Guild", "123456789012345678")
    *  // Crée un document ou récupère un document
    * @returns {Promise<Data>}
    */
-  async create(type, id) {
+  async createData(type, id) {
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
 
-    const merged = {
-      id,
-    };
+    const merged = Object.assign(
+        { _id: mongoose.Types.ObjectId() },
+        {
+          id: id,
+        }
+    );
     const createGuild = await new this.models[type](merged);
     createGuild.save();
     console.info(
@@ -78,22 +78,20 @@ class DatabaseManager {
   }
 
   /**
-   *
    * @param type {String} Le model
    * @param id {String} L'id (guild, user)
    * @example
-   * delete("Guild", "123456789012345678")
+   * deleteData("Guild", "123456789012345678")
    *  // Supprime un document
    * @returns {Promise<Boolean>}
    */
-  async delete(type, id) {
+  async deleteData(type, id) {
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
     await this.models[type].findOneAndDelete({ id }).exec();
     return true;
   }
 
   /**
-     *
      * @param type {String} Le model
      * @param id {String} L'id (guild, user)
      * @example
@@ -103,14 +101,10 @@ class DatabaseManager {
      */
   async findOrCreate(type, id) {
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
-
-    const data = await this.models[type].findOne({ id });
+    const data = await this.models[type].findOne({id });
     if (data) return data;
 
-    const merged = {
-      id,
-    };
-    const createGuild = await new this.models[type](merged);
+    const createGuild = await new this.models[type]({ id });
     createGuild.save();
     console.info(
       `[Mongo] Nouveau document ${type}: ${id}`,

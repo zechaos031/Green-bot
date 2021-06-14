@@ -1,75 +1,61 @@
 const { Schema, model } = require('mongoose');
 
-const guild = new Schema({
+const Guild = new Schema({
   TableId: Schema.Types.ObjectId,
-  id: String,
-  prefix: String,
-  description: {
-    type: String,
-    required: false,
-  },
+  id: '',
+  prefix: '',
   counter: {
     type: Object,
     default: {
-      channelMemberID: null,
-      channelBotID: null,
-      ChannelTotalID: null,
+      channelMemberID: '',
+      channelBotID: '',
+      ChannelTotalID: '',
     },
   },
   premium: {
     type: Object,
     default: {
-      active: Boolean,
+      active: false,
       expired: Date.now(),
     },
   },
   autorole: {
     type: Object,
     default: {
-      bot: String,
-      user: String,
+      bot: '',
+      user: '',
     },
   },
   channels: {
     type: Object,
     default: {
-      logs: String,
-      suggestion: String,
-      starboard: String,
-      chatBot: String,
-      level: String,
-      capchat: String,
+      logs: '',
+      suggestion: '',
+      starboard: '',
+      chatBot: '',
+      level: '',
+      capchat: '',
+      giveaway:''
     },
   },
   welcome: {
     type: Object,
     default: {
-      channel: String,
-      image: String,
-      message: String,
-      active: Boolean,
+      channel: '',
+      image: '',
+      message: '',
+      active: false,
     },
   },
   autonick: {
     type: Object,
     default: {
-      active: Boolean,
-      nick: String,
+      active: false,
+      nick: '',
     },
   },
 
   question: {
-    type: Array,
-    default: [],
-  },
-  giveaway: {
-    type: Object,
-    default: {
-      list: [],
-      log: String,
-    },
-  },
-  members: {
     type: Array,
     default: [],
   },
@@ -82,4 +68,4 @@ const guild = new Schema({
     default: [],
   },
 });
-module.exports = model('guild', guild);
+module.exports = model('guild', Guild);
