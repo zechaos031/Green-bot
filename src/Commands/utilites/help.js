@@ -14,7 +14,7 @@ class Help extends Command {
     });
   }
 
-  async run(ctx, errMessage) {
+  async run(message, args,other) {
 
   }
 }
