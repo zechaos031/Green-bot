@@ -9,14 +9,17 @@ const Guild = new Schema({
   },
   blackList: {
     type:Boolean,
-    default:false,
+    default:true,
   },
   counter: {
     type: Object,
     default: {
-      channelMemberID: '',
-      channelBotID: '',
-      ChannelTotalID: '',
+      updated:Date.now(),
+      channel:{
+        channelMemberID: '',
+        channelBotID: '',
+        ChannelTotalID: '',
+      }
     },
   },
   premium: {
