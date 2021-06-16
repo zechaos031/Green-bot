@@ -16,13 +16,32 @@ class DatabaseManager {
      *
      * getData("Guild", {id: 123456789012345678})
      *  // Envoie seulement les donnée de la guild 123456789012345678
-     * @returns {Promise<Data|boolean>} Envoi les donnée ou false si il n'existe pas
+     * @returns {Promise<Object|boolean>} Envoi les donnée ou false si il n'existe pas
      */
 
   async getData(type, find = {}) {
     if (typeof find === 'object') find = {};
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
     const data = await this.models[type].findOne(find);
+    if (data) return data;
+    return false;
+  }
+  /**
+   * @param type {String} Le model
+   * @param find {Object} la donnée en trouve. Default : {}
+   * @example
+   * getAllData("Guild", {})
+   * getAllData("Guild")
+   *  // Envoi toutes les donnée de la table Guild
+   *
+   * getData("Guild", {id: 123456789012345678})
+   *  // Envoie seulement les donnée de la guild 123456789012345678
+   * @returns {Promise<Array|boolean>} Envoi les donnée ou false si il n'existe pas
+   */
+  async getAllData(type, find = {}) {
+    if (typeof find === 'object') find = {};
+    if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
+    const data = await this.models[type].find(find);
     if (data) return data;
     return false;
   }
@@ -43,7 +62,6 @@ class DatabaseManager {
     if (typeof find !== 'object') find = {};
     if (typeof assign !== 'object') assign = {};
     let contentFind = Object.keys(find)
-
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
     let data = !contentFind  ? await this.getData(type) : await this.models[type].findOne(find);
     if (!data) return false;
@@ -111,6 +129,21 @@ class DatabaseManager {
       `[Mongo] Nouveau document ${type}`,
     );
     return createGuild;
+  }
+
+  async updateAllDocument(type){
+    const AllData = await this.getAllData(type)
+    const newData = await new this.models[type]();
+    console.log(newData)
+
+    for(const data of AllData){
+      Object.assign(newData,data)
+
+      newData.save();
+      console.log(newData)
+    }
+
+
   }
 }
 module.exports = DatabaseManager;
