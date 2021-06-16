@@ -8,11 +8,24 @@ module.exports = async (client) => {
     },
   });
 
+
   client.guilds.cache.each((g) => {
     createGuild(client, g);
   });
+
+  await UpdateCounterChannel(client)
 };
 
 async function createGuild(client, guild) {
   await client.db.findOrCreate("Guild", {id: guild.id })
+}
+
+async function UpdateCounterChannel(client){
+  const AllData = await client.db.getAllData("Guild")
+
+  console.log(AllData)
+
+  for(const guildData of AllData){
+    console.log(guildData.counter)
+  }
 }
