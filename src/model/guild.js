@@ -1,9 +1,16 @@
 const { Schema, model } = require('mongoose');
-
+const {config} = require('../../option')
 const Guild = new Schema({
   TableId: Schema.Types.ObjectId,
   id: '',
-  prefix: '',
+  prefix: {
+    type:String,
+    default:config.prefix
+  },
+  blackList: {
+    type:Boolean,
+    default:false,
+  },
   counter: {
     type: Object,
     default: {

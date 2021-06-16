@@ -53,6 +53,7 @@ class GreenBot extends Client {
    await this.loadCommand()
     await this.loadEvent()
     this.connect()
+     await this.updateQuizz()
 
   }
   connect = () =>{
@@ -109,6 +110,21 @@ class GreenBot extends Client {
 
   async refreshStorage() {
     return this.client.shard.broadcastEval(() => this.giveaway.getAllGiveaways());
+  }
+
+  async updateQuizz(){
+    const quizzs = require('./assets/JSON/quizz.json')
+    let data = await this.db.findOrCreate('Quizz')
+    if(data)
+
+    for ( const quizz of quizzs ){
+      let exist = data.List.filter( q => q.id === quizz.id)
+
+      if(!exist.length){
+        data.List.push(quizz)
+      }
+    }
+    await this.db.updateData('Quizz', {}, {List: data.List})
   }
 }
 

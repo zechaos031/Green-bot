@@ -14,5 +14,5 @@ module.exports = async (client) => {
 };
 
 async function createGuild(client, guild) {
-  await client.db.findOrCreate("Guild", guild.id)
+  await client.db.findOrCreate("Guild", {id: guild.id })
 }

@@ -42,9 +42,10 @@ class DatabaseManager {
   async updateData(type, find = {}, assign = {}) {
     if (typeof find !== 'object') find = {};
     if (typeof assign !== 'object') assign = {};
+    let contentFind = Object.keys(find)
 
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
-    let data = await this.models[type].findOne(find);
+    let data = !contentFind  ? await this.getData(type) : await this.models[type].findOne(find);
     if (!data) return false;
     if (typeof data !== 'object') data = {};
     for (const key in assign) {
@@ -99,15 +100,15 @@ class DatabaseManager {
      *  // Crée un document ou récupère un document
      * @returns {Promise<Data>}
      */
-  async findOrCreate(type, id) {
+  async findOrCreate(type, find) {
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
-    const data = await this.models[type].findOne({id });
+    const data = !find  ? await this.getData(type) : await this.models[type].findOne(find);
     if (data) return data;
 
-    const createGuild = await new this.models[type]({ id });
+    const createGuild = await new this.models[type](find ? find: {});
     createGuild.save();
     console.info(
-      `[Mongo] Nouveau document ${type}: ${id}`,
+      `[Mongo] Nouveau document ${type}`,
     );
     return createGuild;
   }
