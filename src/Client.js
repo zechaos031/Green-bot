@@ -33,6 +33,7 @@ class GreenBot extends Client {
     });
 
     require('./Utils/mongoose').init(this)
+
     super.on('message', (message) => {
       const ms = require('ms'); // npm install ms
       const args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
@@ -51,7 +52,7 @@ class GreenBot extends Client {
   }
 
    init =async () => {
-   await this.loadCommand()
+     await this.loadCommand()
     await this.loadEvent()
     this.connect()
      await this.updateQuizz()
@@ -117,6 +118,7 @@ class GreenBot extends Client {
     const quizzs = require('./assets/JSON/quizz.json')
     let data = await this.db.findOrCreate('Quizz')
     if(data)
+      console.info(data)
 
     for ( const quizz of quizzs ){
       let exist = data.List.filter( q => q.id === quizz.id)

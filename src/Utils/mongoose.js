@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 module.exports = {
-  init(client) {
+  async init(client) {
     client.connectionMongo = mongoose.connection;
 
     if (!client.config.db) {
