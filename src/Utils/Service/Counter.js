@@ -3,6 +3,10 @@ class Counter{
         this.client = client
     }
 
+    invoke(client) {
+        return new Counter(client)
+    }
+
     handle(message){
 
     }
