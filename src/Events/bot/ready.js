@@ -23,9 +23,7 @@ async function createGuild(client, guild) {
 async function UpdateCounterChannel(client){
   const AllData = await client.db.getAllData("Guild")
 
-  console.log(AllData)
 
   for(const guildData of AllData){
-    console.log(guildData.counter)
   }
 }
