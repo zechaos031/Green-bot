@@ -3,6 +3,10 @@ const {config} = require('../../option')
 const Guild = new Schema({
   TableId: Schema.Types.ObjectId,
   id: '',
+  lang:{
+    type:String,
+    default:'en'
+  },
   prefix: {
     type:String,
     default:config.prefix

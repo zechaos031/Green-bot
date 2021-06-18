@@ -4,6 +4,7 @@ const { Client, Collection } = require("discord.js"),
     AutoPoster = require('topgg-autoposter'),
     DataBaseManager = require('./Utils/Manager/DatabaseManager'),
     GiveawayManager = require('./Utils/Manager/GiveawaysManager'),
+    Translate = require("./Utils/Manager/TranslateManager"),
     {readdir} = require('fs/promises');
 
 
@@ -16,6 +17,7 @@ class GreenBot extends Client {
     this.db = new DataBaseManager(this)
     this.compenants = require('./Utils/compenents')
     this.utils = require('./Utils/utils')
+    this.translate = new Translate()
     require('./Utils/Extend/DiscordReply')
 
     this.giveaway = new GiveawayManager(this,{

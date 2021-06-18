@@ -7,6 +7,9 @@ module.exports = async (client,message) =>{
     let GuildData = await client.db.getData('Guild',{id:message.guild.id})
     await Levels.handle(message)
     await Automod.handle(message)
+    client.translate.setLang(GuildData.lang || 'en')
+
+    message.channel.send(client.translate.get('event.message.botMessage',client.user.username))
 
 
 }
