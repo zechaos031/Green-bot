@@ -6,6 +6,6 @@ const Members = new Schema({
     List: {
         type:Object,
         default: {  }
-    }
+    },
 });
 module.exports = model('members', Members);

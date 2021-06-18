@@ -15,6 +15,7 @@ class GreenBot extends Client {
     this.tempChannels = new TempChannels(this)
     this.db = new DataBaseManager(this)
     this.compenants = require('./Utils/compenents')
+    this.utils = require('./Utils/utils')
     require('./Utils/Extend/DiscordReply')
 
     this.giveaway = new GiveawayManager(this,{
