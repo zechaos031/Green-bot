@@ -10,6 +10,8 @@ module.exports = async (client,message) =>{
     client.translate.setLang(GuildData.lang || 'en')
 
     message.channel.send(client.translate.get('event.message.botMessage',client.user.username))
-
+    await client.counter.createCounter(message.channel,{type:'member'})
+    await client.counter.createCounter(message.channel,{type:'bot'})
+    await client.counter.createCounter(message.channel,{type:'total'})
 
 }

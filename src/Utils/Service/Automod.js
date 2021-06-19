@@ -3,10 +3,6 @@ class Automod {
         this.client = client
     }
 
-    invoke(client) {
-        return new Automod(client)
-    }
-
     async handle(message) {
         if ( /(discord\.(gg|io|me|li)\/.+|discordapp\.com\/invite\/.+)/i.test(message.content) ) {
             if ( !message.channel.permissionsFor(message.member).has("MANAGE_MESSAGES") ) {

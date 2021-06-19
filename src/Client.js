@@ -5,6 +5,7 @@ const { Client, Collection } = require("discord.js"),
     DataBaseManager = require('./Utils/Manager/DatabaseManager'),
     GiveawayManager = require('./Utils/Manager/GiveawaysManager'),
     Translate = require("./Utils/Manager/TranslateManager"),
+    Counter = require('./Utils/Service/Counter'),
     {readdir} = require('fs/promises');
 
 
@@ -18,6 +19,7 @@ class GreenBot extends Client {
     this.compenants = require('./Utils/compenents')
     this.utils = require('./Utils/utils')
     this.translate = new Translate()
+    this.counter = new Counter(this)
     require('./Utils/Extend/DiscordReply')
 
     this.giveaway = new GiveawayManager(this,{
@@ -36,22 +38,6 @@ class GreenBot extends Client {
     });
 
     require('./Utils/mongoose').init(this)
-
-    super.on('message', (message) => {
-      const ms = require('ms'); // npm install ms
-      const args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
-      const command = args.shift().toLowerCase();
-
-      if (command === 'start-giveaway') {
-        this.giveaway.start(message.channel, {
-          time: ms(args[0]),
-          winnerCount: parseInt(args[1]),
-          prize: args.slice(2).join(' ')
-        }).then((gData) => {
-          console.log(gData);
-        });
-      }
-    });
   }
 
    init =async () => {
@@ -121,8 +107,6 @@ class GreenBot extends Client {
     const quizzs = require('./assets/JSON/quizz.json')
     let data = await this.db.findOrCreate('Quizz')
     if(data)
-      console.info(data)
-
     for ( const quizz of quizzs ){
       let exist = data.List.filter( q => q.id === quizz.id)
 

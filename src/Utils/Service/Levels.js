@@ -3,10 +3,6 @@ class Levels{
         this.client = client
     }
 
-    invoke(client) {
-        return new Levels(client)
-    }
-
     async handle(message){
         let MembersData = await this.client.db.findOrCreate('Members', { id: message.guild.id })
 
