@@ -5,6 +5,10 @@ class Counter{
 
     async createCounter(channel, { type,data }){
         let dataGuild = await this.client.db.getData("Guild",{id:channel.guild.id})
+        /**
+         * TODO
+         *  - Continue counter
+         */
 
         console.log(type,data)
         switch ( type ){

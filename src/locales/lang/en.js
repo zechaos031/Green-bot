@@ -1,5 +1,9 @@
 module.exports = {
     term:{
+        /**
+         * TODO
+         *  - Make translate
+         */
         TraductionManage:{
             notFound:() =>``
         },
