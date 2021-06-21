@@ -4,11 +4,11 @@ const User = new Schema({
   TableId: Schema.Types.ObjectId,
   id: "",
   birthday: {
-    type: "",
+    type:String,
     default: "",
   },
   isPremium: {
-    type: false,
+    type: Boolean,
     default: false,
   },
   quiz: {

@@ -3,5 +3,6 @@ module.exports = {
   User: require('./User'),
   Giveaway: require('./Giveaway'),
   Quizz:require('./Quizz'),
-  Members: require('./Members')
+  Members: require('./Members'),
+  RPG:require('./RPG'),
 };

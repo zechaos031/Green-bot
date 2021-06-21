@@ -17,7 +17,15 @@ module.exports = {
 
         },
         helpCommand: {
+            Commands:{
 
+            },
+            noname:'Pas de nom',
+            nodescription:"Pas de description",
+            nousage:"Pas d'usage",
+            noaliase:"Aucun aliases",
+            nocategory:'Pas de catégorie',
+            noexemple:'Pas d\'exemple'
         },
 
     }

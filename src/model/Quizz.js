@@ -4,8 +4,8 @@ const Quizz = new Schema({
     TableId: Schema.Types.ObjectId,
     id: String,
     List: {
-        type:Array,
-        default:[]
+        type:Object,
+        default:{}
     }
 });
 module.exports = model('quizz', Quizz);

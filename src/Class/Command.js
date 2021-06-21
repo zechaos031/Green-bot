@@ -3,13 +3,13 @@ const { Collection } = require('discord.js');
 class Command {
   constructor(client, options) {
     this.help = {
-      name: options.name || 'Pas de nom',
-      description: options.description || 'Pas de description',
-      usage: options.usage || "Pas d'usage",
-      aliases: options.aliases || ['Aucun aliases'],
-      category: options.category || 'Pas de catégorie',
+      name: options.name || 'helpCommand.noname',
+      description: options.description || 'helpCommand.nodescription',
+      usage: options.usage || "helpCommand.nousage",
+      aliases: options.aliases || ['helpCommand.noaliase'],
+      category: options.category || 'helpCommand.category',
       cooldowns: options.cooldowns || 1000,
-      exemple: options.exemple || "Pas d'exemple",
+      exemple: options.exemple || "helpCommand.exemple",
       subCommands: options.subCommands || [],
       args: options.args || [],
     };
@@ -21,12 +21,6 @@ class Command {
       hidden: options.hidden || false,
     };
     this._dataCooldown = new Collection();
-  }
-
-  static bootstrap(client) {
-    throw new Error(
-      `You must create a bootstrap method into your ${this.name} command class`,
-    );
   }
 
   findMembers(ctx) {

@@ -2,29 +2,19 @@ const { APIMessage, Structures } = require("discord.js");
 
 class Message extends Structures.get("Message") {
     async reply (content, options = {}) {
-        const apiMessage =
-            content instanceof APIMessage
-                ? content.resolveData()
-                : APIMessage.create(
-                this.channel,
-                content,
-                options
-                ).resolveData();
+        const apiMessage = content instanceof APIMessage
+            ? content.resolveData()
+            : APIMessage.create(this.channel, content, options).resolveData();
         Object.assign(apiMessage.data, {
             message_reference: { message_id: this.id },
         });
 
-        if (
-            !apiMessage.data.allowed_mentions ||
-            Object.keys(apiMessage.data.allowed_mentions).length === 0
-        ) {
+        if ( !apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0 ) {
             apiMessage.data.allowed_mentions = {
                 parse: ["users", "roles", "everyone"],
             };
         }
-        if (
-            typeof apiMessage.data.allowed_mentions.replied_user === "undefined"
-        ) {
+        if ( typeof apiMessage.data.allowed_mentions.replied_user === "undefined" ) {
             Object.assign(apiMessage.data.allowed_mentions, {
                 replied_user: options.repliedUser
                     ? true
