@@ -61,15 +61,26 @@ class DatabaseManager {
   async updateData(type, find = {}, assign = {}) {
     if (typeof find !== 'object') find = {};
     if (typeof assign !== 'object') assign = {};
-    let contentFind = Object.keys(find)
+
     if (!type || typeof type !== 'string') throw new Error("Le type n'est pas specifier ou n'est pas une chaine de character");
-    let data = !contentFind  ? await this.getData(type) : await this.models[type].findOne(find);
+    let data = await this.getData(type, find)
     if (!data) return false;
-    if (typeof data !== 'object') data = {};
-    for (const key in assign) {
-      if (data[key] !== assign[key]) data[key] = assign[key];
+    if (Array.isArray(data)) {
+      for (let dataGuild of data) {
+        if (typeof dataGuild !== 'object') dataGuild = {};
+        for (const key in assign) {
+          if (dataGuild[key] !== assign[key]) dataGuild[key] = assign[key];
+        }
+        return dataGuild.updateOne(Object.assign(dataGuild, assign));
+      }
+    } else {
+      if (typeof data !== 'object') data = {};
+      for (const key in assign) {
+        if (data[key] !== assign[key]) data[key] = assign[key];
+      }
+      return data.updateOne(Object.assign(data, assign));
     }
-    return data.updateOne(Object.assign(data, assign));
+
   }
   /**
    * @param type {String} Le model
