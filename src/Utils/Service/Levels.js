@@ -3,15 +3,9 @@ class Levels{
         this.client = client
     }
 
-    async handle(message){
+    async handle(message) {
         let MembersData = await this.client.db.findOrCreate('Members', { id: message.guild.id })
-
-
-        await this.addXp(message,MembersData,message.guild)
-
-
-
-
+        await this.addXp(message, MembersData, message.guild)
     }
 
     async addXp(message,data,guild){
@@ -22,7 +16,10 @@ class Levels{
         }else{
             data.List[message.member.user.id].xpData.xp += Math.floor(Math.random() * 10);
             while ( data.List[message.member.user.id].xpData.xp >= data.List[message.member.user.id].xpData.next.xp){
-                await this.sendMessage(message, data.List[message.member.user.id])
+                let gData = this.client.db.getData('Guild',{ id: guild.id })
+                let channel = message.guild.channels.cache.get(gData.channels?.level) || message.channel
+                let lvlMessage = gData.channels?.message || `${data.List[message.member.user.id].xpData.level} => ${data.List[message.member.user.id].xpData.next.level}`
+                await this.sendMessage(channel, makeString(lvlMessage))
                 data.List[message.member.user.id].xpData.xp -= data.List[message.member.user.id].xpData.next.xp
                 data.List[message.member.user.id].xpData.level= data.List[message.member.user.id].xpData.next.level
                 data.List[message.member.user.id].xpData.next.level++
@@ -30,15 +27,29 @@ class Levels{
             }
         }
         await this.client.db.updateData('Members', { id: guild.id }, { List: data.List })
+
+        function makeString(str){
+            return str.replace('{user}', message.author)
+            .replace('{level}', `${data.List[message.member.user.id].xpData.level + 1}`)
+            .replace('{username}', message.author.username)
+            .replace('{tag}', message.author.tag)
+            .replace('{server}', message.guild.name)
+            .replace('{messagesCount}', data.List[message.member.user.id].xpData.messagecount + 1);
+        }
     }
-    async sendMessage(message,memberData){
-        await message.channel.send({
+    async sendMessage(channel,str){
+        await channel.send({
             embed:{
                 title:`Level UP !`,
-                description:`${memberData.xpData.level} => ${memberData.xpData.next.level}`
+                description:str,
+                color:this.client.compenants.color.embedColor,
+                footer:{
+                    text:(this.client.user.username)
+                }
             }
         })
     }
+
 }
 
 module.exports = Levels

@@ -40,6 +40,13 @@ const Guild = new Schema({
       user: '',
     },
   },
+  level:{
+    type: Object,
+    default: {
+      channel:'',
+      message:''
+    }
+  },
   channels: {
     type: Object,
     default: {

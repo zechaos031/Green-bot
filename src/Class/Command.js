@@ -90,11 +90,11 @@ class Command {
 
   cooldownInfo(user) {
     const now = Date.now();
-    if (!this._dataCooldown.has(this.name)) { this._dataCooldown.set(this.name, new Collection()); }
-    const timestamp = this._dataCooldown.get(this.name).get(user.id);
+    if (!this._dataCooldown.has(this.help.name)) { this._dataCooldown.set(this.help.name, new Collection()); }
+    const timestamp = this._dataCooldown.get(this.help.name).get(user.id);
     if (timestamp > now) return { status: true, time: timestamp - now };
 
-    this._dataCooldown.get(this.name).set(user.id, now + this.help.cooldowns);
+    this._dataCooldown.get(this.help.name).set(user.id, now + this.help.cooldowns);
     return { status: false };
   }
 

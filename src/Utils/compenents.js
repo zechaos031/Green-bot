@@ -16,4 +16,8 @@ const emojis ={
     music:"<:green_music:791586774911680522>"
 }
 
-module.exports = {emojis}
+const color = {
+    embedColor:0x3a871f
+}
+
+module.exports = {emojis,color}

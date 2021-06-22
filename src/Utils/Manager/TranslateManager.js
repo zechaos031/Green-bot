@@ -45,7 +45,7 @@ module.exports = class {
                 return value;
             default:
                 console.error(`Traduction manquante: \`${term}\`  in ${this.lang}`)
-                return Lang.term.TraductionManage.notFound(term, this.lang);
+                return Lang.term.TraductionManage.notFound(term);
         }
     }
 };

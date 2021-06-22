@@ -106,17 +106,18 @@ class GreenBot extends Client {
   async updateQuizz(){
     const quizzs = require('./assets/JSON/quizz.json')
     let data = await this.db.findOrCreate('Quizz')
-    let keys = Object.keys(quizzs)
     if(!data.List){
       Object.assign(data,{List:{}})
     }
-    for ( const quizz of keys ){
-      Object.assign(data.List, {
-        [quizz.id]: {
-          question: quizz.question,
-          response: quizz.response
-        }
-      })
+    for ( const quizz of quizzs ){
+      if(!data.List[quizz.id]){
+        Object.assign(data.List, {
+          [quizz.id]: {
+            question: quizz.question,
+            response: quizz.reponses
+          }
+        })
+      }
     }
     await this.db.updateData('Quizz', {}, {List: data.List})
   }
