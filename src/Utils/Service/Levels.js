@@ -39,14 +39,14 @@ class Levels{
     }
     async sendMessage(channel,str){
         await channel.send({
-            embed:{
+            embeds:[{
                 title:`Level UP !`,
                 description:str,
                 color:this.client.compenants.color.embedColor,
                 footer:{
                     text:(this.client.user.username)
                 }
-            }
+            }]
         })
     }
 

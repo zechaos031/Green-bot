@@ -1,3 +1,4 @@
+const {Permissions} = require('discord.js')
 module.exports = async (client,message) => {
     const Automod = new ( require(`../../Utils/Service/Automod`) )(client)
     const Levels = new ( require(`../../Utils/Service/Levels`) )(client)
@@ -13,18 +14,14 @@ module.exports = async (client,message) => {
     if ( message.content.match(`^<@!?${ client.user.id }>$`) ) {
         return message.channel.send(client.translate.get('event.message.botMessage', client.user.username, GuildData.prefix))
     }
-    console.log(message.content.toString().toLowerCase().startsWith(GuildData.prefix))
-
     //prefix sector
-    if ( message.content.toLowerCase().startsWith(GuildData.prefix) || message.content.toString().toLowerCase().startsWith(`green `) || message.content.toString().toLowerCase().startsWith(`<@783708073390112830>`) ) {
+    if ( message.content.toLowerCase().startsWith(GuildData.prefix) || message.content.toString().toLowerCase().startsWith(`green `) || message.content.startsWith(`<@!${client.user.id}>`) ) {
 
         let args = message.content.toLowerCase().startsWith(GuildData.prefix)
             ? message.content.slice(GuildData.prefix.length).trim().split(/ +/) : message.content.startsWith(`green `)
-                ? message.content.slice(6).trim().split(/ +/) : message.content.startsWith(`^<@!?${ client.user.id }>$`)
-                    ? message.content.slice(21).trim().split(/ +/) : null
+                ? message.content.slice(6).trim().split(/ +/) : message.content.startsWith(`<@!${client.user.id}>`)
+                    ? message.content.slice(`<@!${client.user.id}>`.length).trim().split(/ +/) : null
         //prefix sector end
-        console.log(message.content.slice(GuildData.prefix.length).split(/ +/))
-
         const command = args.shift().toLowerCase();
         const cmd = client.commands.get(command) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(command));
 
@@ -36,11 +33,11 @@ module.exports = async (client,message) => {
             if ( cmd.conf.disabled ) return message.channel.send(client.translate.get("event.message.cmdDisabled"));
         }
 
-        if ( cmd.conf.userPermissions.length > 0 && !cmd.conf.userPermissions.every((p) => message.guild.members.cache.get(message.author.id).hasPermission(p, { checkAdmin: true, checkOwner: true, })) ) {
+        if ( cmd.conf.userPermissions.length > 0 && !cmd.conf.userPermissions.every((p) => message.guild.members.cache.get(message.author.id).permissions.has(Permissions.FLAGS[p])) ) {
             return message.channel.send(client.translate.get("event.message.userNoPerm", cmd.conf.userPermissions.join("`, `")));
         }
 
-        if ( cmd.conf.botPermissions.length > 0 && !cmd.conf.botPermissions.every((p) => message.guild.members.cache.get(client.user.id).hasPermission(p)) ) {
+        if ( cmd.conf.botPermissions.length > 0 && !cmd.conf.botPermissions.every((p) => message.guild.members.cache.get(client.user.id).permissions.has(Permissions.FLAGS[p])) ) {
             return message.channel.send(client.translate.get("event.message.botNoPerm", cmd.conf.userPermissions.join("`, `")));
         }
 
@@ -48,6 +45,7 @@ module.exports = async (client,message) => {
         if ( cooldownLeft.status )
             return message.reply(client.translate.get("event.message.cdwOn", ( cooldownLeft.time / 1000 ).toFixed(0)));
         try{
+
             const UserData = await client.db.findOrCreate('User', { id: message.author.id })
             const RPGData = await client.db.findOrCreate('RPG', { id: message.author.id })
             const MembersData = await client.db.findOrCreate('Members', { id: message.guild.id })
@@ -63,7 +61,7 @@ module.exports = async (client,message) => {
             message.channel.send(client.translate.get("event.message.error"));
             const channelSend = client.channels.cache.get("856861145780584448");
             channelSend.send({
-                embed: {
+                embeds: [{
                     color: client.compenants.color.embedColor,
                     author: {
                         name: message.author.tag,
@@ -85,7 +83,7 @@ module.exports = async (client,message) => {
                         text: client.user.tag,
                         iconURL: client.user.avatarURL(),
                     },
-                },
+                }],
             });
         }
     }

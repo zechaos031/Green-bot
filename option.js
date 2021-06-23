@@ -8,18 +8,16 @@ module.exports = {
       'GUILD_MEMBER',
       'REACTION',
       'GUILD_VOICE_STATES'],
-    ws: {
-      intent: [
-        'GUILD_MEMBERS',
-        'GUILDS',
-        'GUILD_VOICE_STATES',
-        'GUILD_MESSAGES',
-        'GUILD_MESSAGE_REACTIONS',
-        'GUILD_BANS',
-        'GUILD_INVITES',
-        'GUILD_EMOJIS',
-        'GUILD_VOICE_STATES'],
-    },
+    intents: [
+      'GUILDS',
+      'GUILD_BANS',
+      'GUILD_EMOJIS',
+      'GUILD_INTEGRATIONS',
+      'GUILD_INVITES',
+      'GUILD_VOICE_STATES',
+      'GUILD_MESSAGES',
+      'GUILD_MESSAGE_REACTIONS'],
+
     disableMentions: 'all',
     autoReconnect: true,
     messageCacheMaxSize: 100,

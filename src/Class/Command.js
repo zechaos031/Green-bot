@@ -113,12 +113,6 @@ class Command {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
-  hasPermission(ctx, command) {
-    if (command.conf.ownerOnly
-        && !ctx.client.config.owner.includes(ctx.author.id)) { return false; }
-    return !(command.conf.userPermissions.length > 0 && !command.conf.userPermissions.every((p) => ctx.member.hasPermission(p))
-    );
-  }
 }
 
 module.exports = Command;
