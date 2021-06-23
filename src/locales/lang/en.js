@@ -39,7 +39,15 @@ module.exports = {
             props:{
                 name:"Name",
                 use:"Usage",
-                description:"Description"
+                description:"Description",
+                title:(name)=>`Help page of ${name}`,
+                subCommands:"Sub commands",
+                argsCommand:"Optional arguments",
+                disabled:"Disabled",
+                botPermissions:"Require bot permissions",
+                userPermissions:"Require user permissions",
+                noBotPermissions:"No bot permissions require",
+                noUserPermissions:"No user permissions require"
             },
             commands:{
                 //Provide commands description

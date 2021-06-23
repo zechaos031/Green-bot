@@ -56,7 +56,6 @@ module.exports = async (client,message) => {
             Object.assign(memberData, {rpg: RPGData })
             Object.assign(memberData, { guild: MembersData.List[message.member.id] })
 
-            console.log(memberData)
             const data = {guild: GuildData, member:memberData}
             await cmd.run(message,args,data)
         }catch ( err ){

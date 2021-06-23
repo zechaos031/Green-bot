@@ -69,31 +69,63 @@ class Help extends Command {
 
       await message.channel.send(other, {
         embed: {
-          title: this.client.translate.get(cmd.help.embed.title),
+          title: this.client.translate.get('helpCommand.props.title',cmd.help.name),
           fields: [
             {
               name: "Description",
               value: this.client.translate.get(cmd.help.description),
+              inline: true
             },
             {
               name: this.client.translate.get('helpCommand.props.use'),
               value: cmd.help.usage.replace(/{{prefix}}/gm, data.guild.prefix),
+              inline: true
+
             },
             {
               name: "Aliase",
               value: cmd.help.aliases.join(", "),
+              inline: true
+
             },
             {
               name: "Exemple",
               value: cmd.help.exemple.replace(/{{prefix}}/gm, data.guild.prefix),
+              inline: true
+
+            },
+
+            {
+              name:"Cooldown",
+              value: `${(cmd.help.cooldowns/1000)}s`,
+              inline: true
             },
             {
-              name: this.client.translate.get(cmd.help.subCommands),
+              name:this.client.translate.get('helpCommand.props.disabled'),
+              value: `${cmd.conf.disabled}`,
+              inline: true
+
+            },
+            {
+              name:this.client.translate.get('helpCommand.props.botPermissions'),
+              value: `${cmd.conf.userPermissions.length ? cmd.conf.botPermissions.map(g =>`\`g\``) : `${this.client.translate.get('helpCommand.props.noBotPermissions')}`}`,
+              inline: true
+            },
+            {
+              name:this.client.translate.get('helpCommand.props.userPermissions'),
+              value: `${cmd.conf.userPermissions.length ? cmd.conf.userPermissions.map(g =>`\`g\``) : `${this.client.translate.get('helpCommand.props.noUserPermissions')}`}`,
+              inline: true
+            },
+            {
+              name: this.client.translate.get('helpCommand.props.subCommands'),
               value: subcmdInfo.replace(/{{prefix}}/gm, data.guild.prefix),
+
             },
             {
-              name: this.client.translate.get(cmd.help.argsCommand),
+              name: this.client.translate.get('helpCommand.props.argsCommand'),
               value: argsInfo.replace(/{{prefix}}/gm, data.guild.prefix),
+              inline: true
+
             },
           ],
           color: this.client.compenants.color.embedColor,
