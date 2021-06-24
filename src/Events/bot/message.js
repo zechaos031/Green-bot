@@ -47,11 +47,9 @@ module.exports = async (client,message) => {
         try{
 
             const UserData = await client.db.findOrCreate('User', { id: message.author.id })
-            const RPGData = await client.db.findOrCreate('RPG', { id: message.author.id })
             const MembersData = await client.db.findOrCreate('Members', { id: message.guild.id })
-            const memberData = {user:{},rpg:{},guild:{}}
+            const memberData = {user:{},guild:{}}
             Object.assign(memberData,{user:UserData})
-            Object.assign(memberData, {rpg: RPGData })
             Object.assign(memberData, { guild: MembersData.List[message.member.id] })
 
             const data = {guild: GuildData, member:memberData}

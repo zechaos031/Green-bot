@@ -4,5 +4,4 @@ module.exports = {
   Giveaway: require('./Giveaway'),
   Quizz:require('./Quizz'),
   Members: require('./Members'),
-  RPG:require('./RPG'),
 };

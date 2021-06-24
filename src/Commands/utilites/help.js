@@ -40,7 +40,7 @@ class Help extends Command {
               };
             }),
           },
-        ]
+        ],
       })
     } else {
       const cmd = this.client.commands.get(args[0]) || this.client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(args[0]));

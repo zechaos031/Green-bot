@@ -56,6 +56,7 @@ const Guild = new Schema({
       chatBot: '',
       level: '',
       capchat: '',
+      ticket:'',
       giveaway:''
     },
   },
