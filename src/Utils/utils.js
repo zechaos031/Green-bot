@@ -49,6 +49,10 @@ module.exports = {
      * @returns {Array}
      */
     makeButton (buttonsData) {
+        /**
+         * FIXME
+         *  - DiscordAPIError: Invalid Form Body components[0].components[0].emoji.name: Invalid emoji when sending buttons with emoji
+         */
         if(!Array.isArray(buttonsData)) throw new Error('[Make Button Function] Ce n\'est pas un arrays')
         let arrays = this.splitIntoChunk(buttonsData, 5);
         if (arrays.length !== 1) {
