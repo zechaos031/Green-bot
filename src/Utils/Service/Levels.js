@@ -15,6 +15,7 @@ class Levels{
             })
         }else{
             data.List[message.member.user.id].xpData.xp += Math.floor(Math.random() * 10);
+            data.List[message.member.user.id].xpData.messagecount++
             while ( data.List[message.member.user.id].xpData.xp >= data.List[message.member.user.id].xpData.next.xp){
                 let gData = this.client.db.getData('Guild',{ id: guild.id })
                 let channel = message.guild.channels.cache.get(gData.channels?.level) || message.channel
