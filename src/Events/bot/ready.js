@@ -9,16 +9,26 @@ module.exports = async (client) => {
   });
 
 
-  client.guilds.cache.each((g) => {
-    createGuild(client, g);
-  });
-
-  await UpdateCounterChannel(client)
+    const channelSend = client.channels.cache.get("856861145780584448");
+    const notLoads = client.notLoaded
+  if(notLoads.length){
+    let str = ''
+    for(const notLoad of notLoads){
+      str += `\n\n**Nom:** ${notLoad.commandName}\n**Erreur:** ${notLoad.error}`
+    }
+    channelSend.send({
+      embeds: [
+        {
+          title:'Les commandes non chargé',
+          description : str,
+          color: client.compenants.color.embedColor
+        }
+      ]
+    })
+  }
+  //await UpdateCounterChannel(client)
 };
 
-async function createGuild(client, guild) {
-  await client.db.findOrCreate("Guild", {id: guild.id })
-}
 
 async function UpdateCounterChannel(client){
   const AllData = await client.db.getAllData("Guild")
