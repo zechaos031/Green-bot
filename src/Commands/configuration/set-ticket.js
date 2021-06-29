@@ -10,7 +10,7 @@ class SetTicket extends Command {
       category: 'configuration',
       cooldowns: 5000,
       exemple: '{{prefix}}set-ticket #channel',
-      botPermissions: ['READ_MESSAGES'],
+      botPermissions: ['VIEW_CHANNEL','SEND_MESSAGES','MANAGE_CHANNELS'],
     });
     this.client = client
     this.prompts = [
