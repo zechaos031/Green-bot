@@ -20,6 +20,14 @@ module.exports = {
                 error:"Une erreur s'est produite mais le personnel a été informé de cet incident."
             }
         },
+        utils:{
+            noMember: `Aucun membre mention`,
+            noYourself:'Vous ne pouvais pas faire ca sur vous même',
+            noPermited:"Vous ne pouvez pas faire ca sur l'owner du serveur",
+            upperThanYou:"L'utilisateur est plus élevé ou egale a vous dans les role",
+            upperThanMe:"L'utilisateur est plus élevé ou egale a moi dans les role",
+
+        },
         commands:{
             help:{
                 author:(username) =>`Liste des commande ${username}`,

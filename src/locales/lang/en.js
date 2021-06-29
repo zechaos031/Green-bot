@@ -19,6 +19,14 @@ module.exports = {
                 error:"An error occurred but staff were informed of this incident."
             }
         },
+        utils:{
+            noMember: `No menbers provided`,
+            noYourself:'You don\'t that yourself',
+            noPermited:"You can't do that on the server owner",
+            upperThanYou:"The user is higher or equal to you in the roles",
+            upperThanME:"The user is higher or equal to me in the roles",
+
+        },
         commands:{
             help:{
                 author:(username) =>`Command list of ${username}`,
