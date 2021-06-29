@@ -9,7 +9,7 @@ class ModeationTools{
       data.membersData.List[data.user.id].cases.push({
         cases:data.membersData.List[data.user.id].cases.length ? data.membersData.List[data.user.id].cases.length : 1,
         type,
-        reason: `[${type}] ${data.reason}`,
+        reason: `${data.reason}`,
         date: Date.now(),
         moderator: data.moderator.username,
       })
