@@ -6,6 +6,7 @@ const { Client, Collection } = require("discord.js"),
     GiveawayManager = require('./Utils/Manager/GiveawaysManager'),
     Translate = require("./Utils/Manager/TranslateManager"),
     Counter = require('./Utils/Service/Counter'),
+    ModerationTools = require('./Class/ModeationTools'),
     {readdir} = require('fs/promises');
 
 
@@ -20,9 +21,10 @@ class GreenBot extends Client {
     this.utils = require('./Utils/utils')
     this.translate = new Translate()
     this.counter = new Counter(this)
+    this.moderation = new ModerationTools(this)
     require('./Utils/Extend/DiscordReply')
 
-    this.giveaway = new GiveawayManager(this,{
+    this.giveaway = new GiveawayManager(this, {
       storage: false,
       updateCountdownEvery: 10000,
       default: {
@@ -38,16 +40,17 @@ class GreenBot extends Client {
     });
 
     require('./Utils/mongoose').init(this)
+    this.notLoaded =[]
   }
 
-   init =async () => {
-     await this.loadCommand()
+  init = async () => {
+    await this.loadCommand()
     await this.loadEvent()
     this.connect()
-     await this.updateQuizz()
+    await this.updateQuizz()
 
   }
-  connect = () =>{
+  connect = () => {
     super.login(this.config.token)
   }
 
@@ -65,7 +68,8 @@ class GreenBot extends Client {
               const command = new ( require('./Commands/' + file + '/' + cmd) )(this);
               this.commands.set(command.help.name, command)
             } catch ( e ) {
-              console.info("[Bot] " + cmd + " n'as pas chargé\n" + e)
+              console.error("[Bot] " + cmd + " n'as pas chargé\n" + e)
+              this.addNotLoaded(cmd,e.message)
             }
           }
           console.info(`[Bot] ${ Number }/${ cmds.length } commandes chargé dans ${ file }`)
@@ -103,14 +107,14 @@ class GreenBot extends Client {
     return this.client.shard.broadcastEval(() => this.giveaway.getAllGiveaways());
   }
 
-  async updateQuizz(){
+  async updateQuizz() {
     const quizzs = require('./assets/JSON/quizz.json')
     let data = await this.db.findOrCreate('Quizz')
-    if(!data.List){
-      Object.assign(data,{List:{}})
+    if ( !data.List ) {
+      Object.assign(data, {List: {}})
     }
-    for ( const quizz of quizzs ){
-      if(!data.List[quizz.id]){
+    for ( const quizz of quizzs ) {
+      if ( !data.List[quizz.id] ) {
         Object.assign(data.List, {
           [quizz.id]: {
             question: quizz.question,
@@ -121,6 +125,51 @@ class GreenBot extends Client {
     }
     await this.db.updateData('Quizz', {}, {List: data.List})
   }
+
+  async parseUser(message, args) {
+    let user = message.guild.members.cache.get(message.mentions.members.first().id) || message.guild.members.cache.get(args[0]);
+    if ( user !== null ) {
+      console.log(message.mentions.members.first())
+      if ( !user ) {
+        message.channel.send(message.client.translate.get('utils.noMember'));
+        return false
+      }
+      if ( user.id === message.author.id ) {
+        message.channel.send(message.client.translate.get('utils.noYourself'));
+
+        return false
+      }
+      let owner = await message.guild.fetchOwner()
+      if ( user.id === owner.id) {
+        message.channel.send(message.client.translate.get('utils.noPermited'));
+
+        return false
+      }
+
+      if ( message.author.id !== owner.id ) {
+
+
+        if (message.guild.member.cache.get(message.member).roles.highest.comparePositionTo(user.roles.highest) > 0) {
+          message.channel.send(message.client.translate.get('utils.upperThanYou'));
+          return false
+        }
+        if (message.guild.member.cache.get(this.user).roles.highest.comparePositionTo(user.roles.highest) > 0) {
+          message.channel.send(message.client.translate.get('utils.upperThanMe'));
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  addNotLoaded(name,e) {
+    this.notLoaded.push({commandName: name.split('.')[0], error: e})
+  }
+
+  notLoaded(){
+    return this.notLoaded
+  }
+
 }
 
 

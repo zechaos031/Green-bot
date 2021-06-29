@@ -11,7 +11,7 @@ class Automod {
                 //Ajout du warn
 
                 //Si il n'as pas de warn
-                await this.addWarn(message, warndata, "Anti invite")
+                await this.client.moderation.addWarn(message, warndata, "Anti invite")
 
                 //check il a plus de 3 warns
                 if ( warndata.List[message.member.id].warns.length >= 3 ) {
@@ -46,36 +46,7 @@ class Automod {
         }
     }
 
-    async addWarn(message,data, type){
-        if(data.List[message.member.id]){
-            data.List[message.member.id].warns.push({
-                reason: `[Automod] ${type}`,
-                date: Date.now(),
-                moderator: this.client.user.username,
-                content: message.content
-            })
-        }else{
-            Object.assign(data.List, {
-                [message.member.id]: this.client.utils.makeMember(message.member)
-            })
-            data.List[message.member.id].warns.push({
-                reason: `[Automod] ${type}`,
-                date: Date.now(),
-                moderator: this.client.user.username,
-            })
 
-        }
-
-        data.List[message.member.id].cases.push({
-            cases:data.List[message.member.id].cases.length ? data.List[message.member.id].cases.length : 1,
-            reason: `[Automod] ${type}`,
-            date: Date.now(),
-            moderator: this.client.user.username,
-        })
-        await this.client.db.updateData('Members', { id: message.guild.id }, { List: data.List })
-
-        return data
-    }
 
 }
 
