@@ -1,4 +1,5 @@
 const { MessageActionRow} = require("discord.js");
+const https = require('https');
 
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
      */
     makeMember(member){
         return {
-            username:member.user.username,
+            username:member.username,
             warns:[],
             cases:[],
             xpData:{
@@ -95,6 +96,23 @@ module.exports = {
             return { animated: Boolean(m[1]), name: m[2], id: m[3] || null };
         }
     },
+
+    request(url,option){
+        return new Promise((resolve, reject) => {
+            https.get(url, option,(resp) => {
+                let data = '';
+                resp.on('data', (chunk) => {
+                    data += chunk;
+                });
+                resp.on('end', () => {
+                        resolve(JSON.parse(data))
+                });
+
+            }).on("error", (err) => {
+                reject("Error: " + err.message);
+            });
+        })
+    }
 
 
 }
