@@ -4,7 +4,6 @@ class ModeationTools{
   }
 
   async addCases(type,data){
-    console.log(data)
     if(data.membersData.List[data.user.id]){
       data.membersData.List[data.user.id].cases.push({
         cases:data.membersData.List[data.user.id].cases.length ? data.membersData.List[data.user.id].cases.length : 1,
@@ -25,6 +24,18 @@ class ModeationTools{
         moderator: data.moderator.username,
       })
     }
+    if(data.guild.members.cache.get(data.user.id)){
+      data.user.send({
+        embeds:[
+          {
+            title:this.client.translate.get('Moderation.embed.title'),
+            description:this.client.translate.get('Moderation.embed.description',type,data),
+            color:this.client.compenants.color.embedColor
+          }
+        ]
+      })
+    }
+
     await this.client.db.updateData('Members', { id: data.guild.id }, { List: data.membersData.List })
   }
 
