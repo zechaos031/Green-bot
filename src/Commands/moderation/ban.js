@@ -19,29 +19,36 @@ class Ban extends Command {
     let str
     if(member){
       if(!await this.client.parseUser(message, args)) return;
+      const banned = await message.guild.bans.fetch(member.user.id);
+      if(banned){
+        return message.channel.send(this.client.translate.get('commands.ban.alreadyBan',member.user,banned.reason))
+      }
        str = args.join(' ').replace(`<@!${member.id}>`,'').replace(member.username,'').replace(member.id,'')
 
       let reason =str.length ? str : 'commands.ban.noReason' //Provide reason
       await this.client.moderation.addCases("Ban",{
         membersData:data.guild.members,
         user:member.user,
-        moderator : message.member,
+        moderator : message.member.user,
         guild:message.guild,
         reason
       })
-      message.channel.send(`\`${member.user.username}\` a etait ban pour \`${reason}\``)
-      //await member.send('')
-      //await message.guild.members.ban(member.user.id, {reason})
+      message.channel.send(this.client.translate.get('commands.ban.succeed',member.user,reason))
+
+      await message.guild.members.ban(member.user.id, {reason})
 
     }else{
       this.client.utils.request(`https://discord.com/api/v9/users/${args[0]}`,{headers: {
           "authorization": `Bot ${this.client.token}`
         }}).then(async (user ) =>{
+        const banned = await message.guild.bans.fetch(user.id);
+        if(banned){
+          return message.channel.send(this.client.translate.get('commands.ban.alreadyBan',user,banned.reason))
+
+        }
         str = args.slice(1).join(' ')
         //Remove mention / username / id on message
-        let reason =str.length ? str : 'commands.ban.noReason' //Provide reason
-        //await message.guild.members.ban(member.user.id, {reason})
-        console.log(member)
+        let reason =str.length ? str : this.client.translate.get('commands.ban.noReason') //Provide reason
         await this.client.moderation.addCases("Ban",{
           membersData:data.guild.members,
           user,
@@ -49,8 +56,9 @@ class Ban extends Command {
           guild:message.guild,
           reason
         })
-        message.channel.send(`\`${user.username}\` a etait ban pour \`${reason}\``)
-        //await message.guild.members.ban(user.id, {reason})
+
+        message.channel.send(this.client.translate.get('commands.ban.succeed',user,reason))
+        await message.guild.members.ban(user.id, {reason})
 
       })
     }
