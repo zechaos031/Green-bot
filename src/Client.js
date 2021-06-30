@@ -129,7 +129,6 @@ class GreenBot extends Client {
   async parseUser(message, args) {
     let user = message.guild.members.cache.get(message.mentions.members.first().id) || message.guild.members.cache.get(args[0]);
     if ( user !== null ) {
-      console.log(message.mentions.members.first())
       if ( !user ) {
         message.channel.send(message.client.translate.get('utils.noMember'));
         return false
