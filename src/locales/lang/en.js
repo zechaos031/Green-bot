@@ -19,12 +19,18 @@ module.exports = {
                 error:"An error occurred but staff were informed of this incident."
             }
         },
+        Moderation:{
+            embed:{
+                title:'New case',
+                description:(type,data) =>`Case Type: ${type}\nReason: ${data.reason}\nModerator: ${data.moderator.username}\nGuild: ${data.guild.name}`
+            }
+        },
         utils:{
             noMember: `No menbers provided`,
             noYourself:'You don\'t that yourself',
             noPermited:"You can't do that on the server owner",
             upperThanYou:"The user is higher or equal to you in the roles",
-            upperThanME:"The user is higher or equal to me in the roles",
+            upperThanMe:"The user is higher or equal to me in the roles",
 
         },
         commands:{
@@ -37,6 +43,16 @@ module.exports = {
                 noArgsCommand:"No argument",
                 subCommands:"Sub commands",
                 argsCommand:"Optional arguments"
+            },
+            ban:{
+                noReason:"No reason provided",
+                alreadyBan:(user,reason) => `${user.username} has already banned for ${reason}`,
+                succeed: (user, reason) => `${user.username} has been banned for ${reason}`
+            },
+            kick:{
+                noReason:"No reason provided",
+                succeed: (user, reason) => `${user.username} has been kicked for ${reason}`
+
             }
         },
 
