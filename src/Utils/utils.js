@@ -45,45 +45,70 @@ module.exports = {
     },
 
     /**
-     * Fait les rows a partir d'un liste de buttons
-     * @param buttonsData {Array} Un array de buttons
+     * Fait les rows a partir d'un liste de composant
+     * @param components {Array} Un array de composant
      * @returns {Array}
      */
-    makeButton (buttonsData) {
+    makeRows (components) {
         /**
          * FIXME
-         *  - DiscordAPIError: Invalid Form Body components[0].components[0].emoji.name: Invalid emoji when sending buttons with emoji
+         *  - DiscordAPIError: Invalid Form Body components[0].components[0].emoji.name: Invalid emoji
+         *                     Invalid Form Body components[0].components[0].options[0].emoji.id: Invalid emoji
+         *                     when sending component with emoji button/menu
          */
-        if(!Array.isArray(buttonsData)) throw new Error('[Make Button Function] Ce n\'est pas un arrays')
-        let arrays = this.splitIntoChunk(buttonsData, 5);
+        if(!Array.isArray(components)) throw new Error('[Make Button Function] Ce n\'est pas un arrays')
+        let arrays = this.splitIntoChunk(components, 5);
         if (arrays.length !== 1) {
             let ActionRow = [];
-            //Fait les Rows en pour tous les 5 buttons
-            for (const buttons of arrays) {
+            //Fait les Rows en pour tous les 5 composant
+            for (const data of arrays) {
                 //Fait un nouveau row
                 let row = new MessageActionRow();
-                for (const button of buttons) {
-                    //Ajoute les buttons
-                    row.addComponents(button);
+                for (const component of data) {
+                    //Ajoute les composant
+
+                    console.log(component)
+                    row.addComponents(component);
                 }
                 ActionRow.push(row);
             }
             return ActionRow;
         } else {
-            const componentButtons = new MessageActionRow();
-            for (const button of buttonsData) {
-                componentButtons.addComponents(button);
+            const componentActionRow = new MessageActionRow();
+            for (const component of components) {
+                console.log(component)
+                if(component.type ==3){
+                    for(const option of component.options){
+                        if(option.emoji){
+                            option.emoji = this.resolveEmote(option.emoji)
+                            console.log(option.emoji)
+                        }
+                    }
+                }else if(component.type ==2) {
+                    if ( component.emoji ) {
+                        component.emoji = this.resolveEmote(component.emoji)
+                    }
+                }
+
+
+                componentActionRow.addComponents(component);
             }
-            return [componentButtons];
+            return [componentActionRow];
         }
     },
+
+    /**
+     * EXTRACT FROM DJS
+     * @param emoji
+     * @returns {null|{id: string}|{name: string, animated: boolean, id: null}|{name: string, animated: boolean, id}|{name, animated, id}}
+     */
 
     resolveEmote(emoji){
         if (!emoji) return null;
         if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : parseEmoji(emoji);
-        /*const { id, name, animated } = emoji;
+        const { id, name, animated } = emoji;
         if (!id && !name) return null;
-        return { id, name, animated };*/
+        return { id, name, animated };
 
 
         function parseEmoji(text) {
