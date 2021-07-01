@@ -9,10 +9,7 @@ class Automod {
                 let warndata = await this.client.db.findOrCreate('Members', { id: message.guild.id })
                 await message.delete();
                 //Ajout du warn
-
-                //Si il n'as pas de warn
-                await this.client.moderation.addWarn(message, warndata, "Anti invite")
-
+                await this.client.moderation.addWarn(message, warndata, "[AUTOMOD] Anti invite")
                 //check il a plus de 3 warns
                 if ( warndata.List[message.member.id].warns.length >= 3 ) {
                     //Ban check

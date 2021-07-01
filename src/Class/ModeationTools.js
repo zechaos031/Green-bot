@@ -44,7 +44,7 @@ class ModeationTools{
   async addWarn(message,data, type){
     if(data.List[message.member.id]){
       data.List[message.member.id].warns.push({
-        reason: `[Automod] ${type}`,
+        reason: `${type}`,
         date: Date.now(),
         moderator: this.client.user.username,
         content: message.content
@@ -54,7 +54,7 @@ class ModeationTools{
         [message.member.id]: this.client.utils.makeMember(message.member)
       })
       data.List[message.member.id].warns.push({
-        reason: `[Automod] ${type}`,
+        reason: `${type}`,
         date: Date.now(),
         moderator: this.client.user.username,
       })
@@ -65,7 +65,7 @@ class ModeationTools{
       user:message.member,
       moderator : this.client.user,
       guild:message.guild,
-      reason: `[Automod] ${type}`,
+      reason: `${type}`,
     })
     await this.client.db.updateData('Members', { id: message.guild.id }, { List: data.List })
 
