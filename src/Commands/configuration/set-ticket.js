@@ -33,7 +33,7 @@ class SetTicket extends Command {
         }
       ],
 
-      components: this.client.utils.makeButton([
+      components: this.client.utils.makeRows([
         {
           type:2,
           style:1,

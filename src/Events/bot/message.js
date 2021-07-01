@@ -36,7 +36,6 @@ module.exports = async (client,message) => {
         if ( cmd.conf.userPermissions.length > 0 && !cmd.conf.userPermissions.every((p) => message.guild.members.cache.get(message.author.id).permissions.has(Permissions.FLAGS[p])) ) {
             return message.channel.send(client.translate.get("event.message.userNoPerm", cmd.conf.userPermissions.join("`, `")));
         }
-
         if ( cmd.conf.botPermissions.length > 0 && !cmd.conf.botPermissions.every((p) => message.guild.members.cache.get(client.user.id).permissions.has(Permissions.FLAGS[p])) ) {
             return message.channel.send(client.translate.get("event.message.botNoPerm", cmd.conf.userPermissions.join("`, `")));
         }
